@@ -1,32 +1,54 @@
 import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import classNames from "classnames";
+import { useGarage } from "../../providers/GarageProvider";
 
-type VehicleType = {
-  name: string;
+type scrollRefType = {
+  scrollRef: React.RefObject<HTMLDivElement>;
 };
 
-type VehiclesProps = {
-  vehicles: VehicleType[];
-};
+const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
+  const { selectedVehicle, selectVehicle, garageVehicles } = useGarage();
 
-const Vehicles: React.FC<VehiclesProps> = ({ vehicles }) => {
+  useEffect(() => {
+    console.table(selectedVehicle);
+  }, [selectedVehicle?.id]);
+
   return (
-    <div className="grid grid-rows-1 h-full w-full grid-flow-col place-content-start gap-5 p-2 overflow-hidden">
-      {vehicles.map((vehicle, index) => (
+    <div
+      ref={scrollRef}
+      className="grid grid-rows-1 h-full w-full grid-flow-col place-content-start gap-5 p-[10px] overflow-x-hidden"
+    >
+      {garageVehicles.map((vehicle, index) => (
         <Card
           shadow="sm"
           key={index}
           isPressable
-          onPress={() => console.log("item pressed")}
-          className="h-full w-48"
+          onPress={() => selectVehicle(vehicle)}
+          className={classNames(
+            "h-full w-48 hover:scale-110 border border-black bg-zinc-900/80",
+            {
+              "border-amber-500": vehicle.id === selectedVehicle?.id,
+            }
+          )}
         >
           <CardBody className="w-full h-3/4 flex justify-center items-center box-border p-3">
             <img
-              className="w-full h-full object-contain p-2 shadow-md shadow-black rounded-lg"
+              className={classNames(
+                "w-full h-full object-contain p-2 shadow-md shadow-black rounded-lg",
+                {
+                  "bg-gradient-to-t from-amber-500/20 to-transparent via-transparent":
+                    vehicle.id === selectedVehicle?.id,
+                }
+              )}
               src={`https://docs.fivem.net/vehicles/${vehicle.name}.webp`}
             />
           </CardBody>
-          <CardFooter className="text-small justify-between h-1/4">
+          <CardFooter
+            className={classNames("text-small justify-between h-1/4", {
+              "text-amber-400": vehicle.id === selectedVehicle?.id,
+            })}
+          >
             <b>{vehicle.name.toUpperCase()}</b>
             <p className="text-default-500 pr-2">27asd34</p>
           </CardFooter>
@@ -37,22 +59,37 @@ const Vehicles: React.FC<VehiclesProps> = ({ vehicles }) => {
 };
 
 const GarageVehicles: React.FC = () => {
-  const vehicles: VehicleType[] = [
-    { name: "zentorno" },
-    { name: "drafter" },
-    { name: "sentinel" },
-    { name: "sentinel3" },
-    { name: "akuma" },
-    { name: "alpha" },
-    { name: "ardent" },
-    { name: "autarch" },
-    { name: "baller" },
-    { name: "baller" },
-  ];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const container = containerRef?.current;
+    if (!isScrolling && container) {
+      setIsScrolling(true);
+      const scrollAmount = container.clientWidth * 0.75;
+      const scrollLeft =
+        direction === "left"
+          ? container.scrollLeft - scrollAmount
+          : container.scrollLeft + scrollAmount;
+
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: "smooth",
+      });
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 500);
+    }
+  };
 
   return (
-    <div className="h-full grid grid-rows-1 grid-cols-[5%_90%_5%] place-content-center place-items-center">
-      <Button isIconOnly className="bg-zinc-900" aria-label="Like">
+    <div className="h-full grid grid-rows-1 grid-cols-[5%_90%_5%] place-content-center place-items-center select-none">
+      <Button
+        onClick={() => handleScroll("left")}
+        isIconOnly
+        className="bg-zinc-900 text-amber-400 shadow-lg shadow-black"
+        aria-label="Like"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -66,8 +103,13 @@ const GarageVehicles: React.FC = () => {
           />
         </svg>
       </Button>
-      <Vehicles vehicles={vehicles} />
-      <Button isIconOnly className="bg-zinc-900" aria-label="Like">
+      <Vehicles scrollRef={containerRef} />
+      <Button
+        onClick={() => handleScroll("right")}
+        isIconOnly
+        className="bg-zinc-900 text-amber-400 shadow-lg shadow-black"
+        aria-label="Like"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

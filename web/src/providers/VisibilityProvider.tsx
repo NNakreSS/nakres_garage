@@ -50,7 +50,11 @@ export const VisibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       }}
     >
       <div
-        style={{ visibility: visible ? "visible" : "hidden", height: "100%" ,width: "100%" }}
+        style={{
+          visibility: visible ? "visible" : "hidden",
+          height: "100%",
+          width: "100%",
+        }}
       >
         {children}
       </div>
