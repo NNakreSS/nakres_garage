@@ -12,7 +12,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
 
   useEffect(() => {
     console.table(selectedVehicle);
-  }, [selectedVehicle?.id]);
+  }, [selectedVehicle?.plate]);
 
   return (
     <div
@@ -28,7 +28,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
           className={classNames(
             "h-full w-48 hover:scale-110 border border-black bg-zinc-900/80",
             {
-              "border-amber-500": vehicle.id === selectedVehicle?.id,
+              "border-amber-500": vehicle.plate === selectedVehicle?.plate,
             }
           )}
         >
@@ -38,7 +38,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
                 "w-full h-full object-contain p-2 shadow-md shadow-black rounded-lg",
                 {
                   "bg-gradient-to-t from-amber-500/20 to-transparent via-transparent":
-                    vehicle.id === selectedVehicle?.id,
+                    vehicle.plate === selectedVehicle?.plate,
                 }
               )}
               src={`https://docs.fivem.net/vehicles/${vehicle.name}.webp`}
@@ -46,11 +46,11 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
           </CardBody>
           <CardFooter
             className={classNames("text-small justify-between h-1/4", {
-              "text-amber-400": vehicle.id === selectedVehicle?.id,
+              "text-amber-400": vehicle.plate === selectedVehicle?.plate,
             })}
           >
-            <b>{vehicle.name.toUpperCase()}</b>
-            <p className="text-default-500 pr-2">27asd34</p>
+            <b>{vehicle.displayName.toUpperCase()}</b>
+            <p className="text-default-500 pr-2">{vehicle.plate}</p>
           </CardFooter>
         </Card>
       ))}

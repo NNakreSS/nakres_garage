@@ -4,14 +4,6 @@ import { useGarage } from "../../providers/GarageProvider";
 const Vehicle = () => {
   const { selectedVehicle } = useGarage();
 
-  const vehicleInfo = {
-    motor: 70,
-    hız: 65,
-    fren: 50,
-    hızlanma: 40,
-    tutuş: 80,
-  };
-
   return (
     <div className="grid grid-rows-1 grid-cols-[75%_25%]">
       <div id="move-preview"></div>
@@ -22,16 +14,22 @@ const Vehicle = () => {
               id="vehicleName"
               className="text-amber-400 font-bold flex items-center text-lg"
             >
-              {selectedVehicle?.name.toLocaleUpperCase()}
+              {selectedVehicle?.displayName.toLocaleUpperCase()}
             </span>
             <span
               id="vehiclePlate"
               className="text-start  text-gray-400 flex items-center text-sm"
             >
-              27asd687
+              {selectedVehicle?.plate}
             </span>
           </div>
-          {Object.entries(vehicleInfo).map(([key, value]) => (
+          {[
+            selectedVehicle?.acceleration,
+            selectedVehicle?.traction,
+            selectedVehicle?.brakes,
+            selectedVehicle?.enginePercent,
+            selectedVehicle?.topSpeed,
+          ].map((value, key) => (
             <Progress
               key={key}
               size="md"
