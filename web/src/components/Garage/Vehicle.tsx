@@ -1,12 +1,59 @@
 import { Button, Progress } from "@nextui-org/react";
 import { useGarage } from "../../providers/GarageProvider";
+import { useEffect, useRef } from "react";
+import { fetchNui } from "../../utils/fetchNui";
 
 const Vehicle = () => {
-  const { selectedVehicle } = useGarage();
+  const { selectedVehicle, locale } = useGarage();
+
+  const moveContainer = useRef<HTMLDivElement>(null);
+  const isClickMoveContainer = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (isClickMoveContainer.current) {
+        const movementMouse = event.movementX;
+        const rotate = movementMouse * 0.1;
+        console.log("salataaa");
+        console.log(rotate);
+        fetchNui("setPreviewVehicleHeading", rotate);
+      }
+    };
+
+    const handleMouseDown = () => {
+      isClickMoveContainer.current = true;
+    };
+
+    const handleMouseUp = () => {
+      isClickMoveContainer.current = false;
+    };
+
+    const handleMouseLeave = () => {
+      isClickMoveContainer.current = false;
+    };
+
+    const container = moveContainer.current;
+    if (container) {
+      container.addEventListener("mousedown", handleMouseDown);
+      container.addEventListener("mouseup", handleMouseUp);
+      container.addEventListener("mouseleave", handleMouseLeave);
+      container.addEventListener("mousemove", handleMouseMove);
+      return () => {
+        container.removeEventListener("mouseleave", handleMouseLeave);
+        container.removeEventListener("mousedown", handleMouseDown);
+        container.removeEventListener("mouseup", handleMouseUp);
+        container.removeEventListener("mousemove", handleMouseMove);
+      };
+    }
+  }, []);
 
   return (
     <div className="grid grid-rows-1 grid-cols-[75%_25%]">
-      <div id="move-preview"></div>
+      <div
+        id="move-preview"
+        className="cursor-col-resize"
+        ref={moveContainer}
+      ></div>
       <div className="grid grid-cols-1 grid-rows-[80%_10%] gap-5 px-3 select-none">
         <div className="bg-zinc-900/95 w-full h-full rounded-md grid grid-cols-1 grid-rows-6 p-10 gap-2 shadow-lg shadow-black place-content-center place-items-center">
           <div className="grid grid-cols-1 grid-rows-2 w-full h-full gap-1 border-l-3 border-amber-400 p-2 bg-gradient-to-r from-amber-400/20 to-transparent">
@@ -47,8 +94,11 @@ const Vehicle = () => {
             />
           ))}
         </div>
-        <Button className="bg-zinc-950  text-amber-400  outline-none ring-2 ring-black font-bold text-lg shadow-lg shadow-black/90 h-2/3">
-          Spawn
+        <Button
+          onClick={() => fetchNui("spawnSelectedVehicle", selectedVehicle)}
+          className="bg-zinc-900  text-amber-400  outline-none ring-2 ring-black font-bold text-lg shadow-lg shadow-black/90 h-2/3"
+        >
+          {locale?.spawn}
         </Button>
       </div>
     </div>

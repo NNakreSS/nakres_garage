@@ -17,7 +17,11 @@ export type GarageProviderValueTypes = {
   garageVehicles: vehicleType[];
   setGarageVehicles: (vehicles: vehicleType[]) => void;
   selectedVehicle: vehicleType | null;
-  selectVehicle: (vehicle: vehicleType) => void;
+  selectVehicle: (vehicle: vehicleType | null) => void;
+  locale: localeType | null;
+  depotGarage: boolean;
+  garageName: string;
+  garageLimit: number | false;
 };
 
 export type GarageDataType = {
@@ -25,4 +29,30 @@ export type GarageDataType = {
   garageName: string;
   garageLimit: number | false;
   depotGarage: boolean;
+};
+
+export type localeType = {
+  limit: string;
+  total: string;
+  spawn: string;
+  model: string;
+  garage: string;
+  impounds: string;
+  admin: {
+    header: string;
+    info: string;
+    garageName: string;
+    garageType: string;
+    vehicleType: string;
+    garageLimit: string;
+    job: string;
+    jobType: string;
+    npcCoord: string;
+    spawnCoord: string;
+    enterCoord: string;
+    previewCoord: string;
+    blip: string;
+    submit: string;
+    unlimited: string;
+  };
 };

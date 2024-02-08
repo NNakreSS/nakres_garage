@@ -4,12 +4,15 @@ NUI.vehicles = {}
 NUI.toggleNuiFrame = function(shouldShow)
     SetNuiFocus(shouldShow, shouldShow)
     SendReactMessage('setVisible', shouldShow)
+    if not shouldShow then
+        Cam.TogglePrevCam(false);
+        Vehicle.deletePreview();
+        -- NUI.toggleAdminUi(false);
+    end
 end
+
 RegisterNUICallback('hideFrame', function()
     NUI.toggleNuiFrame(false)
-end)
-RegisterCommand('show-nui', function()
-    NUI.toggleNuiFrame(true)
 end)
 
 NUI.toggleUi = function(limit)
@@ -18,9 +21,9 @@ NUI.toggleUi = function(limit)
         garageName = CurrentGarage.label,
         garageLimit = limit or false,
         depotGarage = CurrentGarage.type == 'depot' and true or false,
-        -- locale = Text[Config.locale].ui
+        locale = Text[Config.locale].ui
     }
-    print(data)
+    NUI.toggleNuiFrame(true)
     SendReactMessage('toggleGarageUi', data)
 end
 
@@ -39,12 +42,14 @@ NUI.localeAdminUi = function(locales)
     })
 end
 
-RegisterNUICallback("previewSelectedVehicle", function(vehicle)
+RegisterNUICallback("previewSelectedVehicle", function(vehicle, cb)
+    print("previewSelectedVehicle")
     Vehicle.createPreview(vehicle, CurrentGarage.previewPoint or CurrentGarage.spawnPoint)
+    cb(true)
 end)
 
-RegisterNUICallback("setPreviewVehicleHeading", function(rotateHeading)
-    rotateHeading = tonumber(rotateHeading)
+RegisterNUICallback("setPreviewVehicleHeading", function(data)
+    local rotateHeading<const> = tonumber(data)
     Vehicle.rotatePreview(rotateHeading)
 end)
 
@@ -59,21 +64,8 @@ RegisterNUICallback("spawnSelectedVehicle", function(vehicle)
             return Config.Notify(Text[Config.locale].error.not_clear_area, 'error')
         end
     end
-    Cam.TogglePrevCam(false);
-    Vehicle.deletePreview();
-    toggleNuiFrame(false);
+    NUI.toggleNuiFrame(false);
     Vehicle.createOriginal(vehicle, CurrentGarage.spawnPoint);
-end)
-
-RegisterNUICallback("closeUI", function()
-    Cam.TogglePrevCam(false);
-    Vehicle.deletePreview();
-    toggleNuiFrame(false);
-    NUI.toggleAdminUi(false);
-end)
-
-RegisterNUICallback("getLocale", function(data, cb)
-    return cb(Text[Config.locale].ui.admin)
 end)
 
 RegisterNUICallback("createGarage", function(data)

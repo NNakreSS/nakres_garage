@@ -1,7 +1,11 @@
-import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from "react";
+// UI kits
+import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
 import classNames from "classnames";
+// context
 import { useGarage } from "../../providers/GarageProvider";
+// utils
+import { fetchNui } from "../../utils/fetchNui";
 
 type scrollRefType = {
   scrollRef: React.RefObject<HTMLDivElement>;
@@ -11,7 +15,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
   const { selectedVehicle, selectVehicle, garageVehicles } = useGarage();
 
   useEffect(() => {
-    console.table(selectedVehicle);
+    if (selectedVehicle) fetchNui("previewSelectedVehicle", selectedVehicle);
   }, [selectedVehicle?.plate]);
 
   return (
