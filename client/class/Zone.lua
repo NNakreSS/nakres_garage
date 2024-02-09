@@ -127,7 +127,7 @@ Zone.createTarget              = function(targetName, ped, _type, job)
                     options = {
                         {
                             type = "client",
-                            -- icon = 'fa-solid fa-warehouse',
+                            icon = 'fa-solid fa-warehouse',
                             label = targetName,
                             targeticon = 'fa-solid fa-warehouse',
                             action = function()
