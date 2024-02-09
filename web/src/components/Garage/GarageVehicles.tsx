@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 // UI kits
 import { Button, Card, CardBody, CardFooter } from "@nextui-org/react";
 import classNames from "classnames";
@@ -21,7 +21,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
   return (
     <div
       ref={scrollRef}
-      className="grid grid-rows-1 h-full w-full grid-flow-col place-content-start gap-5 p-[10px] overflow-x-hidden"
+      className="grid grid-rows-1 h-full min-w-1/2 max-w-full grid-flow-col place-content-start gap-5 p-5 overflow-x-hidden"
     >
       {garageVehicles.map((vehicle, index) => (
         <Card
@@ -41,7 +41,7 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
               className={classNames(
                 "w-full h-full object-contain p-2 shadow-md shadow-black rounded-lg",
                 {
-                  "bg-gradient-to-t from-amber-500/20 to-transparent via-transparent":
+                  "bg-gradient-to-t from-amber-400/30 to-transparent via-amber-500/10":
                     vehicle.plate === selectedVehicle?.plate,
                 }
               )}
@@ -49,12 +49,19 @@ const Vehicles: React.FC<scrollRefType> = ({ scrollRef }) => {
             />
           </CardBody>
           <CardFooter
-            className={classNames("text-small justify-between h-1/4", {
-              "text-amber-400": vehicle.plate === selectedVehicle?.plate,
-            })}
+            className={classNames(
+              "text-small grid grid-cols-1 grid-rows-2 gap-5 h-1/4",
+              {
+                "text-amber-400": vehicle.plate === selectedVehicle?.plate,
+              }
+            )}
           >
-            <b>{vehicle.displayName.toUpperCase()}</b>
-            <p className="text-default-500 pr-2">{vehicle.plate}</p>
+            <b className="text-center w-full">
+              {vehicle.displayName.toUpperCase()}
+            </b>
+            <p className="text-foreground/60 pr-2 text-center w-full">
+              {vehicle.plate}
+            </p>
           </CardFooter>
         </Card>
       ))}
@@ -131,4 +138,4 @@ const GarageVehicles: React.FC = () => {
   );
 };
 
-export default GarageVehicles;
+export default memo(GarageVehicles);

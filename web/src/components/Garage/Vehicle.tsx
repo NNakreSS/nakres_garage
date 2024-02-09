@@ -1,7 +1,16 @@
+import { memo, useEffect, useRef } from "react";
+// ui
 import { Button, Progress } from "@nextui-org/react";
+// context
 import { useGarage } from "../../providers/GarageProvider";
-import { useEffect, useRef } from "react";
+// utils
 import { fetchNui } from "../../utils/fetchNui";
+// icons
+import { GiTireTracks } from "react-icons/gi";
+import { SiCarthrottle } from "react-icons/si";
+import { MdTireRepair } from "react-icons/md";
+import { PiEngineFill } from "react-icons/pi";
+import { IoSpeedometer } from "react-icons/io5";
 
 const Vehicle = () => {
   const { selectedVehicle, locale } = useGarage();
@@ -14,8 +23,6 @@ const Vehicle = () => {
       if (isClickMoveContainer.current) {
         const movementMouse = event.movementX;
         const rotate = movementMouse * 0.1;
-        console.log("salataaa");
-        console.log(rotate);
         fetchNui("setPreviewVehicleHeading", rotate);
       }
     };
@@ -47,48 +54,58 @@ const Vehicle = () => {
     }
   }, []);
 
+  const stats = {
+    accelaration: selectedVehicle?.acceleration,
+    traction: selectedVehicle?.traction,
+    brakes: selectedVehicle?.brakes,
+    enginePercent: selectedVehicle?.enginePercent,
+    topSpeed: selectedVehicle?.topSpeed,
+  };
+
+  const iconsClass = "tracking-wider text-amber-500 text-2xl";
+  const icons: Record<string, JSX.Element> = {
+    accelaration: <SiCarthrottle className={iconsClass} />,
+    traction: <MdTireRepair className={iconsClass} />,
+    brakes: <GiTireTracks className={iconsClass} />,
+    enginePercent: <PiEngineFill className={iconsClass} />,
+    topSpeed: <IoSpeedometer className={iconsClass} />,
+  };
+
   return (
-    <div className="grid grid-rows-1 grid-cols-[75%_25%]">
+    <div className="grid grid-rows-1 grid-cols-[80%_20%]">
       <div
         id="move-preview"
         className="cursor-col-resize"
         ref={moveContainer}
       ></div>
       <div className="grid grid-cols-1 grid-rows-[80%_10%] gap-5 px-3 select-none">
-        <div className="bg-zinc-900/95 w-full h-full rounded-md grid grid-cols-1 grid-rows-6 p-10 gap-2 shadow-lg shadow-black place-content-center place-items-center">
-          <div className="grid grid-cols-1 grid-rows-2 w-full h-full gap-1 border-l-3 border-amber-400 p-2 bg-gradient-to-r from-amber-400/20 to-transparent">
+        <div className="bg-zinc-900/95 w-full h-full rounded-md grid grid-cols-1 grid-rows-6 p-5 gap-2 shadow-lg shadow-black place-content-center place-items-center">
+          <div className="grid grid-cols-1 h-3/4 grid-rows-2 w-full border-l-3 border-amber-400 p-1 pl-5  bg-gradient-to-r from-amber-400/20 to-transparent">
             <span
               id="vehicleName"
-              className="text-amber-400 font-bold flex items-center text-lg"
+              className="text-amber-400 font-extrabold flex items-center "
             >
               {selectedVehicle?.displayName.toLocaleUpperCase()}
             </span>
             <span
               id="vehiclePlate"
-              className="text-start  text-gray-400 flex items-center text-sm"
+              className="text-start  text-foreground/60 flex items-center font-semibold text-sm"
             >
               {selectedVehicle?.plate}
             </span>
           </div>
-          {[
-            selectedVehicle?.acceleration,
-            selectedVehicle?.traction,
-            selectedVehicle?.brakes,
-            selectedVehicle?.enginePercent,
-            selectedVehicle?.topSpeed,
-          ].map((value, key) => (
+          {Object.entries(stats).map(([key, value]) => (
             <Progress
               key={key}
               size="md"
-              radius="md"
+              radius="sm"
               classNames={{
-                base: "max-w-md",
+                base: "max-w-xl",
                 track: "drop-shadow-md border border-default",
-                indicator: "bg-gradient-to-r from-pink-500 to-yellow-500",
-                label: "tracking-wider font-medium text-default-600",
+                indicator: "bg-gradient-to-r from-red-500 to-amber-500",
                 value: "text-foreground/60",
               }}
-              label={key}
+              label={icons[key]}
               value={value}
               showValueLabel={true}
             />
@@ -96,7 +113,7 @@ const Vehicle = () => {
         </div>
         <Button
           onClick={() => fetchNui("spawnSelectedVehicle", selectedVehicle)}
-          className="bg-zinc-900  text-amber-400  outline-none ring-2 ring-black font-bold text-lg shadow-lg shadow-black/90 h-2/3"
+          className="bg-zinc-900  text-amber-400  outline-none font-bold text-lg shadow-lg shadow-black/90 h-2/3"
         >
           {locale?.spawn}
         </Button>
@@ -105,4 +122,4 @@ const Vehicle = () => {
   );
 };
 
-export default Vehicle;
+export default memo(Vehicle);

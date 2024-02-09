@@ -43,17 +43,17 @@ NUI.localeAdminUi = function(locales)
 end
 
 RegisterNUICallback("previewSelectedVehicle", function(vehicle, cb)
-    print("previewSelectedVehicle")
     Vehicle.createPreview(vehicle, CurrentGarage.previewPoint or CurrentGarage.spawnPoint)
-    cb(true)
+    cb("ok")
 end)
 
-RegisterNUICallback("setPreviewVehicleHeading", function(data)
+RegisterNUICallback("setPreviewVehicleHeading", function(data, cb)
     local rotateHeading<const> = tonumber(data)
     Vehicle.rotatePreview(rotateHeading)
+    cb("ok")
 end)
 
-RegisterNUICallback("spawnSelectedVehicle", function(vehicle)
+RegisterNUICallback("spawnSelectedVehicle", function(vehicle, cb)
     if CurrentGarage.type == 'depot' then
         if not payDepotPrice(vehicle.depotPrice) then
             return Config.Notify(Text[Config.locale].error.not_money, 'error')
@@ -66,9 +66,10 @@ RegisterNUICallback("spawnSelectedVehicle", function(vehicle)
     end
     NUI.toggleNuiFrame(false);
     Vehicle.createOriginal(vehicle, CurrentGarage.spawnPoint);
+    cb("ok")
 end)
 
-RegisterNUICallback("createGarage", function(data)
+RegisterNUICallback("createGarage", function(data , cb)
     Admin.createGarage({
         ["label"] = data.garageName,
         ["takeVehicle"] = stringToVector(data.npcCoord),
@@ -85,4 +86,5 @@ RegisterNUICallback("createGarage", function(data)
         ['job'] = data.job,
         ['jobType'] = data.jobType
     })
+    cb("ok")
 end)
