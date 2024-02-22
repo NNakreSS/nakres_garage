@@ -5,8 +5,8 @@ EnteredParked = false;
 HouseMarkers = false;
 Markers = false;
 
-QBCore, ESX = GetResourceState('qb-core') == 'started' and exports['qb-core']:GetCoreObject(), (Config.newEsx and
-    GetResourceState('es_extended') == 'started') and exports["es_extended"]:getSharedObject();
+QBCore = GetResourceState('qb-core') == 'started' and exports['qb-core']:GetCoreObject();
+ESX = (Config.newEsx and GetResourceState('es_extended') == 'started') and exports["es_extended"]:getSharedObject();
 
 Citizen.CreateThread(function()
     while true do
@@ -25,8 +25,8 @@ AddEventHandler(ResourceName .. ":openGarageMenu", function()
         NUI.vehicles = {};
         CurrentGarageVehicles = {};
         for _k, vehicle in pairs(GarageVehicles) do
-            vehicle.mods = json.decode(vehicle.mods)
-            local stats = vehicle.mods.stats or {}
+            vehicle.mods = json.decode(vehicle.mods);
+            local stats = vehicle.mods.stats or {};
             CurrentGarageVehicles[vehicle.plate] = vehicle;
             NUI.vehicles[#NUI.vehicles + 1] = {
                 enginePercent = Nakres.Round(vehicle.engine / 10, 0),
@@ -41,7 +41,7 @@ AddEventHandler(ResourceName .. ":openGarageMenu", function()
                 displayName = vehicle.mods.displayName,
                 model = vehicle.mods.model,
                 depotPrice = vehicle.depotprice
-            }
+            };
         end
         local limit = (Config.uniqueGarages and Config.limitedGarages) and
                           (CurrentGarage.limit and CurrentGarage.limit or Config.defaultLimit) or
@@ -260,3 +260,11 @@ RegisterCommand(Config.commands.savegarage, function()
         Admin.saveNewGarage()
     end
 end)
+
+-- local PolyZoneMode = exports['polyZoneCreator']:PolyZoneMode();
+
+-- RegisterCommand("startCreate", function()
+--     PolyZoneMode.start(function(data)
+--         print(json.encode(data))
+--     end)
+-- end)

@@ -20,32 +20,32 @@ Garages.create = function(index, garage)
         Garages.createBlips(garage);
     end
 
-    Zone.createTargetPed(index, garage)
+    Zone.createTargetPed(index, garage);
     if garage.type == "job" then
         if Player.job.name == garage.job or Player.job.type == garage.jobType then
-            Zone.create("garageArea", garage, index)
+            Zone.create("garageArea", garage, index);
         end
     elseif garage.type == "gang" then
         if Player.gang == garage.job then
-            Zone.create("garageArea", garage, index)
+            Zone.create("garageArea", garage, index);
         end
     else
-        Zone.create("garageArea", garage, index)
+        Zone.create("garageArea", garage, index);
     end
 end
 
 --- Creates blips for garages on the map.
 --- @param blip table garage
 Garages.createBlips = function(blip)
-    local Garage = AddBlipForCoord(blip.takeVehicle.x, blip.takeVehicle.y, blip.takeVehicle.z)
-    SetBlipSprite(Garage, blip.blipNumber)
-    SetBlipDisplay(Garage, Config.blipsDisplay)
-    SetBlipScale(Garage, blip.blipScale or Config.blipsScale)
-    SetBlipAsShortRange(Garage, Config.blipsAsShortRange)
-    SetBlipColour(Garage, blip.blipColor)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(blip.blipName)
-    EndTextCommandSetBlipName(Garage)
+    local Garage = AddBlipForCoord(blip.takeVehicle.x, blip.takeVehicle.y, blip.takeVehicle.z);
+    SetBlipSprite(Garage, blip.blipNumber);
+    SetBlipDisplay(Garage, Config.blipsDisplay);
+    SetBlipScale(Garage, blip.blipScale or Config.blipsScale);
+    SetBlipAsShortRange(Garage, Config.blipsAsShortRange);
+    SetBlipColour(Garage, blip.blipColor);
+    BeginTextCommandSetBlipName("STRING");
+    AddTextComponentSubstringPlayerName(blip.blipName);
+    EndTextCommandSetBlipName(Garage);
 end
 
 --- @param garageType string garage type
@@ -53,7 +53,7 @@ end
 Garages.getVehicles = function(garageType, garageIndex)
     return Nakres.Client.AwaitTriggerCallback(ResourceName .. ':server:Callback:getGarageVehicles',
         garageIndex,
-        garageType)
+        garageType);
 end
 
 Garages.createPreview = function()
@@ -65,12 +65,12 @@ Garages.createPreview = function()
     for index, garage in pairs(Config.Garages) do
         if garage["type"] ~= 'depot' and garage["type"] ~= 'house' then
             if garage.previewsCoords then
-                local garageCoord = vector3(garage.takeVehicle.x, garage.takeVehicle.y, garage.takeVehicle.z)
-                local dst = #(pCoord - garageCoord)
-                Garages.previewVehicles[index] = Garages.previewVehicles[index] or {}
-                Garages.previewSpawnAreaIndex[index] = Garages.previewSpawnAreaIndex[index] or {}
+                local garageCoord = vector3(garage.takeVehicle.x, garage.takeVehicle.y, garage.takeVehicle.z);
+                local dst = #(pCoord - garageCoord);
+                Garages.previewVehicles[index] = Garages.previewVehicles[index] or {};
+                Garages.previewSpawnAreaIndex[index] = Garages.previewSpawnAreaIndex[index] or {};
                 if dst <= 150 then
-                    local vehicles = Garages.allGarageVehicles[index] or {}
+                    local vehicles = Garages.allGarageVehicles[index] or {};
                     for i_, vehicle in ipairs(vehicles) do
                         local plate = vehicle.plate
                         local mods = json.decode(vehicle.mods)

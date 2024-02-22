@@ -1,8 +1,7 @@
 Config = {
-    debugMode = false -- Only developer mode
+    debugMode = false, -- Only developer mode
+    locale = 'En' -- shareds/locales.lua table (En - Tr - De)
 }
-
-Config.locale = 'En' -- shareds/locales.lua table (En - Tr - De)
 
 -- For blips
 Config.blipsDisplay = 4 -- https://docs.fivem.net/natives/?_0x9029B2F3DA924928 SetBlipDisplay displayId
