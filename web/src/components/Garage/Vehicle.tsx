@@ -11,12 +11,10 @@ import { SiCarthrottle } from "react-icons/si";
 import { MdTireRepair } from "react-icons/md";
 import { PiEngineFill } from "react-icons/pi";
 import { IoSpeedometer } from "react-icons/io5";
+import classNames from "classnames";
 
 const Vehicle = () => {
   const { selectedVehicle, locale, garageLimit, garageVehicles } = useGarage();
-
-  console.log(garageLimit);
-
   const moveContainer = useRef<HTMLDivElement>(null);
   const isClickMoveContainer = useRef<boolean>(false);
 
@@ -127,9 +125,14 @@ const Vehicle = () => {
         </div>
         <Button
           onClick={() => fetchNui("spawnSelectedVehicle", selectedVehicle)}
-          className="bg-zinc-900  text-amber-400  outline-none font-bold text-lg shadow-lg shadow-black/90 h-2/3"
+          className={classNames(
+            "bg-zinc-900  text-amber-400  outline-none font-bold text-lg shadow-lg shadow-black/90 h-2/3",
+            { "text-green-500": selectedVehicle?.depotPrice ?? 0 > 0 }
+          )}
         >
-          {locale?.spawn}
+          {selectedVehicle?.depotPrice ?? 0 > 0
+            ? "$ " + selectedVehicle?.depotPrice
+            : locale?.spawn}
         </Button>
       </div>
     </div>

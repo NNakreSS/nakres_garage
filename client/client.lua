@@ -43,7 +43,7 @@ AddEventHandler(ResourceName .. ":openGarageMenu", function()
                 depotPrice = vehicle.depotprice
             };
         end
-        local limit = (Config.uniqueGarages and Config.limitedGarages) and
+        local limit = (CurrentGarage.type ~= "depot" and (Config.uniqueGarages and Config.limitedGarages)) and
                           (CurrentGarage.limit and CurrentGarage.limit or Config.defaultLimit) or
                           Text[Config.locale].ui.unlimited
         NUI.toggleUi(limit)
