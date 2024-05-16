@@ -13,6 +13,7 @@ import {
   vehicleType,
 } from "../types/types";
 import { fetchNui } from "../utils/fetchNui";
+import { isEnvBrowser } from "../utils/misc";
 
 const GarageContext = createContext<GarageProviderValueTypes | null>(null);
 
@@ -25,6 +26,26 @@ export const GarageProvider: React.FC<{ children: React.ReactNode }> = ({
   const [depotGarage, setDepotGarage] = useState<boolean>(false);
   const [garageName, setGarageName] = useState<string>("Garage");
   const [garageLimit, setGarageLimit] = useState<number | false>(false);
+
+  const [visible, setVisible] = useState(false);
+
+  useNuiEvent<boolean>("setVisible", setVisible);
+  // Handle pressing escape/backspace
+  useEffect(() => {
+    // Only attach listener when we are visible
+    if (!visible) return;
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (["Backspace", "Escape"].includes(e.code)) {
+        if (!isEnvBrowser()) fetchNui("hideFrame");
+        else setVisible(!visible);
+      }
+    };
+
+    window.addEventListener("keydown", keyHandler);
+
+    return () => window.removeEventListener("keydown", keyHandler);
+  }, [visible]);
 
   useNuiEvent<any>("toggleGarageUi", (d: any) => {
     setGarageVehicles(d.vehicles);
@@ -48,7 +69,11 @@ export const GarageProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <GarageContext.Provider value={values}>{children}</GarageContext.Provider>
+    <GarageContext.Provider value={values}>
+      <div className={`${visible ? "visible w-full h-full" : "hidden"}`}>
+        {children}
+      </div>
+    </GarageContext.Provider>
   );
 };
 
