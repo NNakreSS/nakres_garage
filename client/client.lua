@@ -240,10 +240,12 @@ RegisterCommand(Config.commands.createGarage, function(_i, args, rawCommand)
             else
                 Config.Notify(Text[Config.locale].error.already_exist_garage, 'error')
             end
-            Admin.currentNewIndex = garageindex
+            -- Admin.currentNewIndex = garageindex
         else
             Config.Notify(Text[Config.locale].error.not_garage_index, 'error')
         end
+    else
+        Config.Notify(Text[Config.locale].error.not_access, 'error')
     end
 end)
 
