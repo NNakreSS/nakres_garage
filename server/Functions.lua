@@ -1,5 +1,6 @@
 QBCore = GetResourceState('qb-core') == 'started' and exports['qb-core']:GetCoreObject();
 ESX = (Config.newEsx and GetResourceState('es_extended') == 'started') and exports["es_extended"]:getSharedObject();
+
 if GetResourceState('es_extended') == 'started' and not ESX then
     TriggerEvent('esx:getSharedObject', function(obj)
         ESX = obj
