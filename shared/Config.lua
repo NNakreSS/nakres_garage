@@ -29,9 +29,10 @@ Config.newEsx = true -- Set to true if you are using the latest version of the e
 Config.spacedPlate = true -- False == Saves plates by removing spaces; set to true if you are using spaced plates.
 Config.garagePreview = true -- True == Creates preview coordinates for vehicles placed in the garage using the coordinates specified in the previews table of the garage data.
 Config.admins = {"license:430ef51e2398d78f2cb10ce264a758fe08067aab"} -- Priority check with SteamID; if not found, checks license key.
+
 -- Create garage commands
 Config.commands = {
-    createGarage = "createng", -- /createng [garageindex]
+    createGarage = "garage:create", -- /createng [garageindex]
     addgaragepreviewpoint = 'addgp',
     savegarage = 'saveng',
     depot = 'depot' -- /depot [price]
