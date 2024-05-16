@@ -28,8 +28,8 @@ NUI.toggleUi = function(limit)
 end
 
 NUI.toggleAdminUi = function(display)
-    SendNUIMessage({
-        messageType = 'adminMenu',
+    SendReactMessage('adminMenu', {
+        garage = Admin.currentNewIndex,
         display = display
     })
     SetNuiFocus(display, display)
@@ -69,22 +69,48 @@ RegisterNUICallback("spawnSelectedVehicle", function(vehicle, cb)
     cb("ok")
 end)
 
-RegisterNUICallback("createGarage", function(data , cb)
+RegisterNUICallback("takeCoord", function(data, cb)
+    SetNuiFocus(false, false);
+    local response = nil;
+    takeCoord(data, function(res)
+        if res.succes then
+            response = res.coords;
+            return
+        else
+            response = false;
+        end
+    end)
+    while response == nil do
+        Wait(10)
+    end
+    SetNuiFocus(true, true);
+    cb(json.encode(response))
+end)
+
+RegisterNUICallback("createGarage", function(data, cb)
     Admin.createGarage({
-        ["label"] = data.garageName,
-        ["takeVehicle"] = stringToVector(data.npcCoord),
-        ["spawnPoint"] = stringToVector(data.spawnCoord),
-        ["putVehicle"] = stringToVector(data.enterCoord),
-        ["previewPoint"] = stringToVector(data.prevCoord),
+        ["label"] = data.garageName, --
+        ["type"] = data.garageType, --- public, job, gang, depot --
+        ["vehicle"] = data.vehicleType, --- car, air, sea, rig --
+        ['limit'] = tonumber(data.garageLimit), --
+        ['job'] = data.job, --
+        ['jobType'] = data.jobType, --
+
         ["showBlip"] = data.blipType and true or false,
         ["blipName"] = data.blipName,
         ["blipNumber"] = tonumber(data.blipType),
         ["blipColor"] = tonumber(data.blipColor),
-        ["type"] = data.garageType, --- public, job, gang, depot
-        ["vehicle"] = data.vehicleType, --- car, air, sea, rig
-        ['limit'] = tonumber(data.garageLimit),
-        ['job'] = data.job,
-        ['jobType'] = data.jobType
+
+        ["takeVehicle"] = stringToVector(data.npcCoord),
+        ["spawnPoint"] = stringToVector(data.spawnCoord),
+        ["putVehicle"] = stringToVector(data.enterCoord),
+        ["previewPoint"] = stringToVector(data.prevCoord),
+        ['previewsCoords'] = stringToVectorArray(data.previewsCoords),
+
+        ["npc"] = {
+            model = data.npc.model,
+            heading = data.npc.heading
+        }
     })
     cb("ok")
 end)
