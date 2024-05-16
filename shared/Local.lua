@@ -13,7 +13,8 @@ Text = {
             garage_not_vehicle = 'Bu garajda bir aracın yok',
             not_create_garage = 'Önce bir garaj oluşturmalısın',
             already_exist_garage = 'Bu garaj indexi zaten mevcut',
-            not_garage_index = 'Garaj indexi belirtmelisin "/garage motelgarage"'
+            not_garage_index = 'Garaj indexi belirtmelisin "/garage motelgarage"',
+            not_access = "Buna yetkin yok"
         },
         success = {
             parked_vehicle = "Araç parkedildi",
@@ -63,7 +64,8 @@ Text = {
             garage_not_vehicle = 'You do not have a vehicle in this garage',
             not_create_garage = 'You must create a garage first',
             already_exist_garage = 'This garage index already exists',
-            not_garage_index = 'You must specify the garage index "/garage motelgarage"'
+            not_garage_index = 'You must specify the garage index "/garage motelgarage"',
+            not_access = "Not Access"
         },
         success = {
             parked_vehicle = "Vehicle parked",
