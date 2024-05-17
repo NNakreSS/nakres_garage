@@ -1,10 +1,11 @@
 import { Input, Select, SelectItem } from "@nextui-org/react";
+import { InputProps } from "../../../types/types";
 import { useAdmin } from "../../../providers/AdminProvider";
 
 const garageTypes = ["public", "job", "gang", "depot"];
 const vehicleTypes = ["car", "air", "sea", "rig"];
 
-export default function GarageTypes() {
+export default function GarageTypes({ register, errors }: InputProps) {
   const {
     garageName,
     setGarageName,
@@ -18,9 +19,14 @@ export default function GarageTypes() {
     setJobType,
   } = useAdmin();
 
+  const isInvalid = (id: string) => (errors[id] ? true : false);
+
   return (
     <div className="grid grid-cols-3 gap-3 w-full py-2">
       <Input
+        {...register("garageName", { required: true })}
+        isInvalid={isInvalid("garageName")}
+        errorMessage={isInvalid("garageName") && "Bir isim girmelisiniz"}
         type="text"
         variant="bordered"
         label="Garage Name"
@@ -29,6 +35,8 @@ export default function GarageTypes() {
         onChange={(e) => setGarageName(e.target.value)}
       />
       <Select
+        {...register("garageType", { required: true })}
+        isRequired
         label="Garage Type"
         placeholder="Select an type"
         labelPlacement="inside"
@@ -43,6 +51,8 @@ export default function GarageTypes() {
         ))}
       </Select>
       <Select
+        {...register("vehicleType", { required: true })}
+        isRequired
         label="Vehicle Type"
         placeholder="Select an type"
         labelPlacement="inside"
@@ -57,6 +67,9 @@ export default function GarageTypes() {
         ))}
       </Select>
       <Input
+        {...register("jobName", { required: garageType == "job" })}
+        isInvalid={isInvalid("jobName")}
+        errorMessage={isInvalid("jobName") && "Bir meslek girin"}
         type="text"
         variant="bordered"
         label="Job Name"
@@ -66,6 +79,9 @@ export default function GarageTypes() {
         onChange={(e) => setJob(e.target.value)}
       />
       <Input
+        {...register("jobType", { required: garageType == "job" })}
+        isInvalid={isInvalid("jobType")}
+        errorMessage={isInvalid("jobType") && "Bir meslek rütbesi"}
         type="text"
         variant="bordered"
         label="Job Type"
@@ -75,6 +91,8 @@ export default function GarageTypes() {
         onChange={(e) => setJobType(e.target.value)}
       />
       <Input
+        {...register("limit", { min: 0 })}
+        min={0}
         type="number"
         variant="bordered"
         label="Limit"

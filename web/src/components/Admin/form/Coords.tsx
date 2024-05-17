@@ -4,8 +4,9 @@ import { fetchNui } from "../../../utils/fetchNui";
 import { useAdmin } from "../../../providers/AdminProvider";
 import { useState } from "react";
 import copyTextToClipboard from "../../../utils/copToClipBoard";
+import { InputProps } from "../../../types/types";
 
-function Coords() {
+function Coords({ errors, register }: InputProps) {
   const { setVisible } = useAdmin();
   const [coord, setCoord] = useState<string>("");
 
@@ -26,13 +27,43 @@ function Coords() {
     copyTextToClipboard(coord);
   };
 
+  const isInvalid = (id: string) => (errors[id] ? true : false);
+
   return (
     <div className="space-y-5 py-2 text-white">
       <div className="grid grid-cols-4 gap-3">
-        <Input type="text" variant="bordered" label="Spawn Coord" />
-        <Input type="text" variant="bordered" label="Take Coord" />
-        <Input type="text" variant="bordered" label="Put Coord" />
-        <Input type="text" variant="bordered" label="Preview Coord" />
+        <Input
+          type="text"
+          variant="bordered"
+          label="Spawn Coord Vector4"
+          {...register("spawnCoord", { required: true })}
+          isInvalid={isInvalid("spawnCoord")}
+          errorMessage={isInvalid("spawnCoord") && "Bu alan zorunludur"}
+        />
+        <Input
+          type="text"
+          variant="bordered"
+          label="Take Coord Vector4"
+          {...register("TakeCoord", { required: true })}
+          isInvalid={isInvalid("TakeCoord")}
+          errorMessage={isInvalid("TakeCoord") && "Bu alan zorunludur"}
+        />
+        <Input
+          type="text"
+          variant="bordered"
+          label="Put Coord Vector4"
+          {...register("PutCoord", { required: true })}
+          isInvalid={isInvalid("PutCoord")}
+          errorMessage={isInvalid("PutCoord") && "Bu alan zorunludur"}
+        />
+        <Input
+          type="text"
+          variant="bordered"
+          label="Preview Coord Vector4"
+          {...register("PreviewCoord", { required: true })}
+          isInvalid={isInvalid("PreviewCoord")}
+          errorMessage={isInvalid("PreviewCoord") && "Bu alan zorunludur"}
+        />
       </div>
       <div className="flex items-center justify-between">
         <div className="space-x-2">

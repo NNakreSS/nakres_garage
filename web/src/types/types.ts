@@ -1,3 +1,5 @@
+import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
+
 export type vehicleType = {
   model: number;
   name: string;
@@ -56,3 +58,8 @@ export type localeType = {
     unlimited: string;
   };
 };
+
+export interface InputProps {
+  register: UseFormRegister<FieldValues>;
+  errors: FieldErrors;
+}
